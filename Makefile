@@ -1,13 +1,4 @@
-HOSTPLATFORM:=WINDOWS
-
-ifeq ($(HOSTPLATFORM),WINDOWS)
-CC := arm-linux-gnueabihf-gcc
-CLEAN:= del /q
-else
-CC := gcc
-CLEAN:= rm -rf
-endif
-#CC:=arm-linux-gnueabihf-gcc
+CC:=gcc
 
 CFLAGS_RELEASE:=	-O2 \
 					-DNDEBUG \
