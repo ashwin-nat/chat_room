@@ -9,11 +9,6 @@
 #include <stdbool.h>
 /***********************************************************************************************/
 #define POLL_PERIOD     1500
-#define CR              "\r"
-#define LF              "\n"
-#define CLEAR_LINE      "\33[2K\r"
-#define CRLF            CR LF
-#define PROMPT_TEXT     CLEAR_LINE"--> "
 #define BUFFER_SIZE     512
 /***********************************************************************************************/
 int chat_room_client_loop(int server_fd, char *username)
@@ -25,13 +20,15 @@ int chat_room_client_loop(int server_fd, char *username)
         {.fd = server_fd,       .events = POLLIN},
     };
     int rc,bytes;
-    bool prompt = true;
+    //bool prompt = false;
     //the client loop
     while(1) {
+#if 0
         if(prompt == true) {
             chat_room_write(STDOUT_FILENO, PROMPT_TEXT, strlen(PROMPT_TEXT));
             prompt = false;
         }
+#endif
         //poll on the 2 fd's
         rc = poll (pfds, 2, POLL_PERIOD);
         if(rc == SOCK_ERR) {
@@ -53,18 +50,21 @@ int chat_room_client_loop(int server_fd, char *username)
                     bytes = chat_room_insert_crlf(buffer, bytes);
                     bytes = chat_room_write(pfds[1].fd, buffer, bytes);
                 }
-                prompt = true;
+                else {
+                    chat_room_write(STDOUT_FILENO, PROMPT_TEXT, strlen(PROMPT_TEXT));
+                }
+                //prompt = true;
             }
             //if server fd is ready for reading
             if(pfds[1].revents & POLLIN) {
                 bytes = chat_room_read(pfds[1].fd, buffer, BUFFER_SIZE-1);
                 if(bytes > 0) {
                     //write it to stdout
-                    bytes = chat_room_insert_crlf(buffer, bytes);
-                    chat_room_write(STDOUT_FILENO, CLEAR_LINE, strlen(CLEAR_LINE));
+                    //bytes = chat_room_insert_crlf(buffer, bytes);
+                    //chat_room_write(STDOUT_FILENO, CLEAR_LINE, strlen(CLEAR_LINE));
                     chat_room_write(STDOUT_FILENO, buffer, bytes);
-                    chat_room_write(STDOUT_FILENO, CR, strlen(CR));
-                    prompt = true;
+                    //chat_room_write(STDOUT_FILENO, CR, strlen(CR));
+                    //prompt = true;
                 }
                 else {
                     printf("connection closed\n");

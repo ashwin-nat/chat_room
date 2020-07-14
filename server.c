@@ -12,7 +12,6 @@
 #define CHAT_ROOM_BACKLOG       5
 #define BUFFER_SIZE             512
 #define MAX_CLIENTS             5
-#define POLLFD_STRUCT_SIZE      MAX_CLIENTS+1
 /***********************************************************************************************/
 //static function declarations
 static int print_usage (char *filename);
