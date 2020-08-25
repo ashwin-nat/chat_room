@@ -456,7 +456,7 @@ static void _cmd_set_room_name (int client_fd, char *room_name)
 
     //update chat room name
     memset (chat_room_name, 0, ROOM_NAME_MAX_LEN);
-    strncpy (chat_room_name, room_name, ROOM_NAME_MAX_LEN);
+    strncpy (chat_room_name, room_name, ROOM_NAME_MAX_LEN-1);
 }
 /*<============================================================>*/
 //send user list to the client that requested it
